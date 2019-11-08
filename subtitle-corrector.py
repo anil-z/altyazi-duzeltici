@@ -25,6 +25,10 @@ def filter_srt(file_name):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print("At least 1 argument.")
+        exit(1)
+
     all_files = [f for f in os.listdir('.') if os.path.isfile(f)]
 
     srt_files_argv = list(filter(filter_srt, sys.argv))
