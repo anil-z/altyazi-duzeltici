@@ -1,3 +1,5 @@
+#!/Users/anilzeybek/opt/miniconda3/bin/python3
+
 import os
 import argparse
 
