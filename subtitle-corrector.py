@@ -2,41 +2,42 @@ import os
 import argparse
 
 
-def change_content(file_name):
+def change_encoding(file_name):
     if file_name[-4:] != '.srt':
-        print('Not a .srt file')
+        print('Dosya uzantısı .srt değil!')
         exit(0)
 
     try:
-        with open(file_name, 'r') as f:
+        with open(file_name, 'rb') as f:
             text = f.read()
-        text.encode('utf-8')
-
-        with open(file_name, 'w', encoding='utf-8') as f:
+        
+        text = text.decode("iso-8859-9")
+        with open(file_name, 'w') as f:
             f.write(text)
 
         print(f'DONE {file_name}')
-    except UnicodeDecodeError:
+    except UnicodeDecodeError as e:
+        print(e)
         print(f'Passing {file_name}')
 
 
-def filter_srt(file_name):
-    return file_name[-4:] == '.srt'
-
-
 def parse_args():
-    parser = argparse.ArgumentParser(description='Change the encoding of srt files to utf-8')
-    parser.add_argument('directory', type=str, help='Directory location of the srt files')
+    parser = argparse.ArgumentParser(description='Klasördeki srt dosyalarındaki türkçe karakter sorununu düzeltir')
+    parser.add_argument('directory', type=str, help='Srt dosyalarının bulunduğu klasör')
     args = parser.parse_args()
 
     return args.directory
 
 
-if __name__ == '__main__':
+def main():
     directory = parse_args()
 
     all_files = [f for f in os.listdir(directory) if os.path.isfile(f)]
-    srt_files = list(filter(filter_srt, all_files))
+    srt_files = list(filter(lambda x: x.split(".")[-1] == "srt", all_files))
 
     for f_name in srt_files:
-        change_content(f_name)
+        change_encoding(f_name)
+
+
+if __name__ == '__main__':
+    main()
