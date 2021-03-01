@@ -2,25 +2,75 @@
 
 import os
 import argparse
+import chardet
+
+lookup_table = {
+    'â€¢': '•',
+    'â€œ': '“',
+    'â€': '”',
+    'â€˜': '‘',
+    'â€™': '’',
+    'Ý¾': 'İ',
+    'Ý': 'İ',
+    'Ä°': 'İ',
+    'Ã': 'İ',
+    'â€¹': 'İ',
+    '&Yacute;': 'İ',
+    'ý': 'ı',
+    'Ä±': 'ı',
+    'Â±': 'ı',
+    'Ã½': 'ı',
+    'Ã›': 'ı',
+    'â€º': 'ı',
+    '&yacute;': 'ı',
+    'Þ': 'Ş',
+    'Åž': 'Ş',
+    'Ã…Å¸': 'Ş',
+    'Ã¥Ã¿': 'Ş',
+    '&THORN;': 'Ş',
+    'þ': 'ş',
+    'Å?': 'ş',
+    'ÅŸ': 'ş',
+    '&thorn;': 'ş',
+    'Ð': 'Ğ',
+    'Äž': 'Ğ',
+    'ð': 'ğ',
+    'Ä?': 'ğ',
+    'ÄŸ': 'ğ',
+    '&eth;': 'ğ',
+    'Ã°': 'ğ',
+    'Ã‡': 'Ç',
+    'Ã?': 'Ç',
+    '&Ccedil;': 'Ç',
+    'Ã§': 'ç',
+    '&ccedil;': 'ç',
+    'Ã–': 'Ö',
+    '&Ouml;': 'Ö',
+    'Ã¶': 'ö',
+    '&ouml;': 'ö',
+    'Ãœ': 'Ü',
+    '&Uuml;': 'Ü',
+    'ÃƒÂ¼': 'ü',
+    'Ã£Â¼': 'ü',
+    'Ã¼': 'ü',
+    '&uuml;': 'ü',
+}
 
 
 def change_encoding(file_name):
-    if file_name[-4:] != '.srt':
-        print('Dosya uzantısı .srt değil!')
-        exit(0)
+    with open(file_name, 'rb') as f:
+        text = f.read()
 
-    try:
-        with open(file_name, 'rb') as f:
-            text = f.read()
-        
-        text = text.decode("iso-8859-9")
-        with open(file_name, 'w') as f:
-            f.write(text)
+    encoding = chardet.detect(text)['encoding']
+    text = text.decode(encoding)
+    
+    for key, value in lookup_table.items():
+        text = text.replace(key, value)
 
-        print(f'DONE {file_name}')
-    except UnicodeDecodeError as e:
-        print(e)
-        print(f'Passing {file_name}')
+    with open(file_name, 'w') as f:
+        f.write(text)
+
+    print(f'Bitti: {file_name}')
 
 
 def parse_args():
