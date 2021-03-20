@@ -6,5 +6,5 @@ PATH'e ekleyerek daha kolay bir kullanım sağlayabilirsiniz
 
 Kullanım:
 ```bash
-./altyazi_duzeltici.py .
+altyazi_duzeltici.py .
 ```
